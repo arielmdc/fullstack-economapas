@@ -20,26 +20,56 @@ include 'site/inclusao.html';
         </div>
         <div class="col-md-7 col-lg-5 col-xl-5 offset-xl-1">
         <img src="imagens/img_login02.png" class="img-fluid" alt="logo">
-            <form>
-             <!-- login input -->
+            <form action="controle/usuario/login.php" method="post">
             <div class="form-outline mb-4">
               <input type="text" name="login" id="login" class="form-control form-control-lg" />
               <label class="form-label" for="form1Example13">Login</label>
             </div>
-            <!-- senha input -->
             <div class="form-outline mb-4">
                 <input type="password" name="senha" id="senha" class="form-control form-control-lg" />
                 <label class="form-label" for="form1Example23">Senha</label>
             </div>
-            <!-- Submit button -->
+            <!-- alerta usuario existente -->
+            <?php
+            session_start();
+            if(isset($_SESSION['mensagem'])){
+                echo('
+                <div class="alert alert-danger d-flex align-items-center" role="alert">
+                <svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Danger:"><use xlink:href="#exclamation-triangle-fill"/></svg>
+                <div>
+                '.$_SESSION['mensagem']['content'].'
+                </div>
+            </div>
+                ');
+                unset($_SESSION['mensagem']);
+            }
+            ?>
+            <!-- alerta verifica_login -->
+            <?php
+            session_start();
+            if(isset($_SESSION['mensagem2'])){
+                echo('
+                <div class="alert alert-warning d-flex align-items-center" role="alert">
+                <svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Warning:"><use xlink:href="#exclamation-triangle-fill"/></svg>
+                <div>
+                '.$_SESSION['mensagem2']['content'].'
+                </div>
+              </div>
+              
+                ');
+                unset($_SESSION['mensagem2']);
+            }
+            ?>
             <center>
-            <button type="submit" class="btn btn-primary btn-lg btn-block" >Entrar</button>
+            <button type="submit" class="btn btn-primary btn-lg btn-block" value=>Entrar</button>
             </center>
 
             </form>
             </div>
             </div>
     </div>
+    <?php include 'site/footer.html'; ?> 
     </section>
 </body>
+
 </html>
