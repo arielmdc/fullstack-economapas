@@ -309,3 +309,15 @@ body{
 .widget-49 .widget-49-meeting-action a {
   text-transform: uppercase;
 }
+
+.div-flex-buttons{
+  display: flex;
+  justify-content: center;
+  margin-bottom: 5px;
+}
+
+.button-perf{
+  margin: 0 5px;
+  height: 40px;
+  width: 93px;
+}
