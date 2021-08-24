@@ -60,11 +60,11 @@ include '../site/navbar.php';
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+        <h5 class="modal-title" id="titulo_modal"></h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body" id="modalBody">
-        ...
+        
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -121,28 +121,90 @@ include '../site/navbar.php';
 $(document).ready(() => {
 
     console.log("teste");
-
-    $.getJSON( "../rotas/data.php?req=getGruposByUsuario", ( data ) => {
-       if (data) {
+    $.ajax({
+        type: "GET",
+        url: "../rotas/data.php?req=getGruposByUsuario",
+        success: function (response) {
+            var data = JSON.parse(response);
+            if (data) {
         console.log(data);
-        $.each( data, (key, val) => {
-                $('#card_grupos').append('<div class="col-lg-4"><div class="card card-margin"><div class="card-header no-border"><h5 class="card-title">Grupo: '+val.grupo_nome+'</h5></div><div class="card-body pt-0"></div><ol class="widget-49-meeting-points"><li class="widget-49-meeting-item"><span>Expand module is removed</span></li><li class="widget-49-meeting-item"><span>Data migration is in scope</span></li><li class="widget-49-meeting-item"><span>Session timeout increase to 30 minutes</span></li></ol><center><div> <button id="button" value="'+val.id_grupo+'" type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">Visualizar</button></div></center><center></form><div><form action="../controller/grupo/remover.php" method="post"><input type="hidden" name="id" value="'+val.id+'"> <center><button type="submit" class="btn btn-danger">Excluir</button></form></center></div></div></div></div></div>');
-                $(button).on("click", function(e) {
-                                $('#modalBody').empty()
-                                //$('#modalTitulo').empty()
-                                //$('#modalFooter').empty()
-                           // e.preventDefault();//$('#grupos').append(val.grupo_nome);
-                        //$('#modalBody').append("<div class='col-md-10'><b>Contato: </b>"+val.grupo_nome+"</div>")
-                        //consulta de buscar cidades e exbiciçao na modal
-                });
-            });       
+        $.each( data, (key, val) => { 
+                $('#card_grupos').append(`
+                <div class="col-lg-4">
+                    <div class="card card-margin">
+                        <div class="card-header no-border">
+                            <h5 class="card-title">Grupo:
+                             ${val.grupo_nome}
+                             </h5>
+                        </div>
+                        <div class="card-body pt-0">
+
+                        </div>
+                        <ol class="widget-49-meeting-points">
+                            <li class="widget-49-meeting-item">
+                                <span>Expand module is removed</span>
+                            </li>
+                            <li class="widget-49-meeting-item">
+                                <span>Data migration is in scope</span>
+                            </li>
+                            <li class="widget-49-meeting-item">
+                                <span>Session timeout increase to 30 minutes</span>
+                            </li>
+                            </ol>
+                            <div class="div-flex-buttons">
+                        <button id="button" value="${val.id_grupo}" type="button" class="btn btn-primary button-perf" data-bs-toggle="modal" data-bs-target="#exampleModal">Visualizar
+
+                         </button>
+
+                         <form action="../controle/grupo/excluir.php" method="post">
+                            <input type="hidden" name="id" value="${val.id_grupo}">
+                            <button type="submit" class="btn btn-danger button-perf">Excluir
+                            </button>
+                        </form>
+                    </div>
+                 
+                 
+                
+                  </div>
+                  </div>
+                  </div>
+                  </div>`);
+                
+            });   
+            $(button).on("click", function(e) {
+                $('#modalBody').empty();
+                // $.getJSON( "../rotas/data.php?req=getGrupos", ( data ) => {
+                //                 console.log(data);
+                //     });
+                    $.ajax({
+                        type: "POST",
+                        url: "../controle/grupo/listar_dados_grupo.php",
+                        data: {
+                            id: $(this).val()
+                        },
+                        success: function (response) {
+                            console.log(response);
+                            $('#modalBody').append(response);
+                        }
+                    });
+                   //$('#modalTitulo').empty()
+                   //$('#modalFooter').empty()
+              // e.preventDefault();//$('#grupos').append(val.grupo_nome);
+           //$('#modalBody').append("<div class='col-md-10'><b>Contato: </b>"+val.grupo_nome+"</div>")
+           //consulta de buscar cidades e exbiciçao na modal
+            });
+                
        }else{
            $('#titulo-tabela').remove();
            $('#card_grupos').append('<span class="pl-2">Você não tem grupos cadastrados.</span>'); 
            
            
        }
+        }
     });
+    // $.getJSON( "../rotas/data.php?req=getGruposByUsuario", ( data ) => {
+       
+    // });
     
 });
 </script>
