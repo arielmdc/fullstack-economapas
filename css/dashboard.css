@@ -321,3 +321,15 @@ body{
   height: 40px;
   width: 93px;
 }
+
+.card_individual{
+  height: 100%;
+}
+
+#card_grupos{
+  margin-bottom: 20px;
+}
+
+.grade{
+  margin-bottom: 10px;
+}
