@@ -333,3 +333,9 @@ body{
 .grade{
   margin-bottom: 10px;
 }
+
+.li_item{
+    display: flex;
+    justify-content: space-between;
+    margin-right: 23;
+}
