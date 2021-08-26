@@ -21,6 +21,14 @@ switch ($req) {
         $resp = $cidade->retornaTodasCidades();
         echo json_encode($resp);
         break;
+    case 'desativarCidades':
+        require_once '../modelo/Cidade.php';
+        $cidade = new Cidade();
+        $id_grupo = $_POST['id_grupo'];
+        $id_cidade = $_POST['id_cidade'];
+        $resp = $cidade->desativaCidade($id_grupo,$id_cidade);
+        echo json_encode($resp);
+        break;
     case 'getGrupos':
         require_once '../modelo/Grupo.php';
         session_start();
