@@ -4,6 +4,7 @@ require_once 'Conexao.php';
 
 class Cidade{
 
+    
     public function retornaCidades($id_grupo){
 
         try {
@@ -109,6 +110,53 @@ class Cidade{
 
         }catch(PDOException $erro){
             return false;
+        }
+    }
+
+    public function cadastro($id_grupo, $id_cidade){
+        
+        try {  
+            $PDO = Conexao::Connect();
+            $query = $PDO->prepare("INSERT INTO grupocidade(id_grupo, id_cidade) VALUES ('$id_grupo', '$id_cidade')");
+            $query->execute();
+            if($query->rowCount() > 0){
+                return array(
+                    'tipo' => 1,
+                    'mensagem' => 'Cidades adicionada.'
+                );
+            }else{
+                return array(
+                    'tipo' => 0,
+                    'mensagem' => 'Erro no cadastro.'
+                );
+            }
+
+        } catch (PDOException $erro) {
+            var_dump($erro);
+            return array(
+                'tipo' => 0,
+                'mensagem' => 'Erro no banco: ' . $erro->getMessage()
+            );
+
+        }
+        var_dump($query);
+
+    }
+
+    public function limpaCidade($id_grupo){
+        try {
+
+            $PDO = Conexao::Connect();
+            $query = $PDO->prepare("DELETE FROM grupocidade WHERE id_grupo = '$id_grupo'");
+            $query->execute();
+
+        } catch (PDOException $erro) {
+            var_dump($erro);
+            return array(
+                'tipo' => 0,
+                'mensagem' => 'Erro no banco: ' . $erro->getMessage()
+            );
+
         }
     }
 
