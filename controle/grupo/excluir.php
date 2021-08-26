@@ -13,9 +13,9 @@ $idGrupo = ($_POST['id']);
 $result = $grupo->deleta($idGrupo);
 
 if($result['tipo']){
-    $_SESSION['mensagem2']['content'] = $result['mensagem'];
+    $_SESSION['success']['content'] = $result['mensagem'];
 }else{
-    $_SESSION['mensagem2']['content'] = $result['mensagem'];
+    $_SESSION['success']['content'] = $result['mensagem'];
 }
 
 header('Location: /visao/dashboard.php');

@@ -12,13 +12,13 @@ if(!empty($grupo_nome)){
     if($result['tipo']){
         $_SESSION['idGrupo_nome'] = $result['idGrupo_nome'];
         header('Location: /visao/dashboard.php');
-        $_SESSION['mensagem2']['content'] = $result['mensagem2'];
+        $_SESSION['success']['content'] = $result['mensagem2'];
     }else{
-        $_SESSION['mensagem']['content'] = $result['mensagem'];
+        $_SESSION['danger']['content'] = $result['mensagem'];
         header('Location: /visao/dashboard.php');
     }
 }else{
-    $_SESSION['mensagem']['content'] = 'Nome do grupo não pode ser vazio';
+    $_SESSION['alerta']['content'] = 'Nome do grupo não pode ser vazio';
     header('Location: /visao/dashboard.php');
 }
 
