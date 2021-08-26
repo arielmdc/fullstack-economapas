@@ -16,10 +16,10 @@ if (!is_null($login) && !is_null($senha)) {
         $_SESSION['nome'] = ($exec['data']['nome']);
         header('Location: ../../visao/dashboard.php');
     }else{
-        $_SESSION['mensagem']['content'] = 'Credenciais incorretas. Por favor, verifique-as e tente novamente.';
+        $_SESSION['danger']['content'] = 'Credenciais incorretas. Por favor, verifique-as e tente novamente.';
         header('Location: /index.php');
     }
 }else{
-    $_SESSION['mensagem']['content'] = 'Por favor, preencha todos os campos!';
+    $_SESSION['alert']['content'] = 'Por favor, preencha todos os campos!';
     header('Location: ../../index.php');
 }

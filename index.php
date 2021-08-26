@@ -32,32 +32,32 @@ include 'site/inclusao.html';
             <!-- alerta usuario existente -->
             <?php
             session_start();
-            if(isset($_SESSION['mensagem'])){
+            if(isset($_SESSION['danger'])){
                 echo('
                 <div class="alert alert-danger d-flex align-items-center" role="alert">
                 <svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Danger:"><use xlink:href="#exclamation-triangle-fill"/></svg>
                 <div>
-                '.$_SESSION['mensagem']['content'].'
+                '.$_SESSION['danger']['content'].'
                 </div>
             </div>
                 ');
-                unset($_SESSION['mensagem']);
+                unset($_SESSION['danger']);
             }
             ?>
             <!-- alerta verifica_login -->
             <?php
             session_start();
-            if(isset($_SESSION['mensagem2'])){
+            if(isset($_SESSION['alert'])){
                 echo('
                 <div class="alert alert-warning d-flex align-items-center" role="alert">
                 <svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Warning:"><use xlink:href="#exclamation-triangle-fill"/></svg>
                 <div>
-                '.$_SESSION['mensagem2']['content'].'
+                '.$_SESSION['alert']['content'].'
                 </div>
               </div>
               
                 ');
-                unset($_SESSION['mensagem2']);
+                unset($_SESSION['alert']);
             }
             ?>
             <center>
