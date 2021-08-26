@@ -8,11 +8,8 @@ class Usuario{
 
         try {
             $pdo = Conexao::Connect();
-            $query = $pdo->prepare("SELECT id_usuario, nome FROM usuarios WHERE login = :login AND senha = :senha");
-            $query->execute([
-                ':login' => $login,
-                ':senha' => $senha
-            ]);
+            $query = $pdo->prepare("SELECT id_usuario, nome FROM usuarios WHERE login = '$login' AND senha = '$senha'");
+            $query->execute();
             if($query->rowCount() > 0){
                 return array(
                     'tipo' => 1,

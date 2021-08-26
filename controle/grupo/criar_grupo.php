@@ -4,7 +4,6 @@ require_once '../../site/verifica_login.php';
 require_once '../../modelo/Grupo.php';
 
 $grupo = new Grupo();
-
 $id_usuario = (isset($_SESSION['id_usuario'])) ? $_SESSION['id_usuario'] : null ;
 $grupo_nome = (isset($_POST['grupo_nome'])) ? $_POST['grupo_nome'] : null ;
 if(!empty($grupo_nome)){

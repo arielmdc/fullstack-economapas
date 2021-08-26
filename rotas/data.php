@@ -17,7 +17,6 @@ switch ($req) {
     case 'todasCidades':
         require_once '../modelo/Cidade.php';
         $cidade = new Cidade();
-        //$id_grupo = $_POST['id_grupo'];
         $resp = $cidade->retornaTodasCidades();
         echo json_encode($resp);
         break;
@@ -46,6 +45,5 @@ switch ($req) {
         break;
 
     default:
-        # code...
         break;
 }

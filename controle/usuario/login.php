@@ -8,7 +8,6 @@ $usuario = new Usuario();
 
 $login = (!empty($_POST['login'])) ? $_POST['login'] : null;
 $senha = (!empty($_POST['senha'])) ? $_POST['senha'] : null;
-
 if (!is_null($login) && !is_null($senha)) {
     $exec = $usuario->logar($login, $senha);
     if ($exec['tipo']) {

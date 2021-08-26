@@ -10,10 +10,8 @@ class Cidade{
         try {
             $PDO = Conexao::Connect();
 
-            $query = $PDO->prepare('SELECT * FROM grupos, grupocidade, cidades WHERE grupocidade.id_grupo = :id_grupo and grupocidade.id_grupo = grupos.id_grupo and grupocidade.id_cidade = cidades.id_cidade');
-            $query->execute([
-                ':id_grupo' => $id_grupo
-            ]);
+            $query = $PDO->prepare("SELECT * FROM grupos, grupocidade, cidades WHERE grupocidade.id_grupo = '$id_grupo' and grupocidade.id_grupo = grupos.id_grupo and grupocidade.id_cidade = cidades.id_cidade");
+            $query->execute();
 
             if($query->rowCount() > 0){
                 
@@ -84,11 +82,8 @@ class Cidade{
 
             $PDO = Conexao::Connect();
 
-            $query = $PDO->prepare('SELECT * FROM grupocidade WHERE id_grupo = :id_grupo AND id_cidade = :id_cidade ');
-            $query->execute([
-                ':id_grupo' => $id_grupo,
-                ':id_cidade' => $id_cidade
-            ]);
+            $query = $PDO->prepare("SELECT * FROM grupocidade WHERE id_grupo = '$id_grupo' AND id_cidade = '$id_cidade' ");
+            $query->execute();
 
             if($query->rowCount() > 0){
                 $result = $query->fetchAll();
@@ -122,7 +117,7 @@ class Cidade{
             if($query->rowCount() > 0){
                 return array(
                     'tipo' => 1,
-                    'mensagem' => 'Cidades adicionada.'
+                    'mensagem' => 'Cidades do grupo alteradas com sucesso.'
                 );
             }else{
                 return array(
@@ -132,14 +127,12 @@ class Cidade{
             }
 
         } catch (PDOException $erro) {
-            var_dump($erro);
             return array(
                 'tipo' => 0,
                 'mensagem' => 'Erro no banco: ' . $erro->getMessage()
             );
 
         }
-        var_dump($query);
 
     }
 
@@ -151,7 +144,6 @@ class Cidade{
             $query->execute();
 
         } catch (PDOException $erro) {
-            var_dump($erro);
             return array(
                 'tipo' => 0,
                 'mensagem' => 'Erro no banco: ' . $erro->getMessage()

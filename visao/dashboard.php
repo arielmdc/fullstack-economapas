@@ -13,6 +13,7 @@ include '../site/navbar.php';
     <title>Economapas</title>
 </head>
 <body>
+    <!-- Inicio body -->
 <div class="container py-5 h-100">
     <center>
     <div class="col-md-7 col-lg-5 col-xl-5 offset-xl-1">
@@ -27,6 +28,7 @@ include '../site/navbar.php';
     </div>
     </center>
     <?php
+        //ALERTAS DE MENSAGENS
             session_start();
             if(isset($_SESSION['alerta'])){
                 echo('
@@ -66,8 +68,6 @@ include '../site/navbar.php';
             }
             ?>
             
-            <!-- Button trigger modal -->
-
 <!-- Modal -->
 <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog">
@@ -85,51 +85,58 @@ include '../site/navbar.php';
     </div>
   </div>
 </div>
-            
-    
     <hr class="bg-dark border-2 border-top border-dark">
-
     <div class="container">
         <div class="row" id="card_grupos">
-       
-
 
         </div>
     </div>
-        </div>
+</div>
+
+<!-- inclusão rodapé -->
 <?php include '../site/footer.html'; ?> 
+<!-- Fim body --> 
 </body>
 
 </hmtl>
 
+<!-- Inicio script -->
 <script>
-function verifySaveButton(){
+//função bloquear botão salvar
 
-if($("#ol_cidades_modal li").length <= 0) {
-    $("#salvar-cidade").prop("disabled", true)
+// function verifySaveButton(){
+
+// if($("#ol_cidades_modal li").length <= 0) {
+//     $("#salvar-cidade").prop("disabled", true)
     
-}else{
-    $("#salvar-cidade").prop("disabled", false)
-} 
-}
+// }else{
+//     $("#salvar-cidade").prop("disabled", false)
+// } 
+// }
+
+//Função deletar uma cidade selecionada da lista
+
 function deleteCityInList(id_cidades){
     
     $(`.item_${id_cidades}`).remove()
     $("#seletor-cidade option[value=" + id_cidades + "]").attr("disabled", false);
     $("#seletor-cidade option[value=" + id_cidades + "]").prop("selected", true);
     verifyAddButton()
-    verifySaveButton()
+    // verifySaveButton()
     verifyEmptyList()
 }
 
+//Função de verificação de lista vazia
+
 function verifyEmptyList(){
-console.log("teste ",$('#ol_cidades_modal li').length)
     if($('#ol_cidades_modal li').length){
         $('#aviso-vazio').remove();
     }else{
         $('#ol_cidades_modal').after('<span id="aviso-vazio">Não há cidades cadastradas</span>');
     }
 }
+
+//Função de preenchimento do select com os options vindo do banco de dados
 
 function preencheOptionCity(){
     $.ajax({
@@ -146,6 +153,8 @@ function preencheOptionCity(){
         }
     });
 }
+
+//Função que desabilita a seleção de cidades ja selecionadas
 
 function disableCity(id_grupo,id_cidade){
     $.ajax({
@@ -165,6 +174,8 @@ function disableCity(id_grupo,id_cidade){
     });
 }
 
+//Função do click da janela modal "Visualizar"
+
 function getClick(){
     $(".button-visualizar").click(function(e) {
         verifyAddButton()
@@ -175,10 +186,8 @@ function getClick(){
             url: "../rotas/data.php?req=cidades",
             data: { id_grupo: id_grupo },
             success: function (response) {
-                console.log(response);
                 preencheOptionCity();
                 var data2 = JSON.parse(response);
-                console.log(data2)
                 var html='';
                 if(!data2){
                      html='<span id="aviso-vazio">Não há cidades cadastradas</span>';
@@ -186,7 +195,6 @@ function getClick(){
 
                     $.each(data2, function (indexInArray, element) { 
                         disableCity(element.id_grupo,element.id_cidades);
-                         console.log(element);
                         html += ` <div><li  class=" li_item widget-49-meeting-item item_${element.id_cidades}"> <input type="hidden" name="id_cidade[]" value="${element.id_cidades}" /> ${element.capital} - ${element.uf} <button class="btn btn-outline-danger" onclick="deleteCityInList('${element.id_cidades}')">X</button></li></div>`;
                     });
                 }
@@ -206,12 +214,15 @@ function getClick(){
 
                                                 <button type="submit" id="salvar-cidade" class="btn btn-primary btn-block w-100 mt-3"> Salvar cidades </button>
                                             </form>`);
-                                            verifySaveButton()
+                                            // verifySaveButton()
+                                            verifyAddButton()
                                             
             }
         });
     });
 }
+
+//Função para setar no card as cidades já cadastradas em um grupo existente
 
 function setCities(id_grupo){
     $.ajax({
@@ -233,33 +244,33 @@ function setCities(id_grupo){
     });
 }
 
+//Função de adição da cidade selecionada na lista
+
 function addCity(){
     
     $("#salvar-cidade").prop("disabled", false)
     event.preventDefault();
     var id_cidade = $("#seletor-cidade").val()
-    console.log(id_cidade);
     var cidade = $("#seletor-cidade option[value="+id_cidade+"]").text();
-    console.log(cidade);
-
     $("#ol_cidades_modal").append(`<li class=" li_item widget-49-meeting-item item_${id_cidade}"> <input type="hidden" name="id_cidade[]" value="${id_cidade}" /> ${cidade} <button class="btn btn-outline-danger" onclick="deleteCityInList('${id_cidade}')">X</button></li>`)
-    
     $("#seletor-cidade option:selected").attr('disabled', true);
     $('#seletor-cidade option:selected').prop("selected", false);
     verifyAddButton()
     verifyEmptyList()
 }
 
+//Função desabilitar o botão de adição de cidades já exista 5 cidades no grupo
 
 function verifyAddButton(){
     if($("#ol_cidades_modal li").length >= 5) {
         $("#adicionar-cidade").prop("disabled", true)
-        
     }else{
         $("#adicionar-cidade").prop("disabled", false)
     } 
 
 }
+
+//Inicio documento ready
 
 $(document).ready(function(){
 
@@ -270,7 +281,6 @@ $(document).ready(function(){
             var data = JSON.parse(response);
             
             if (data) {
-                //console.log(data);
                 $.each( data, (key, val) => { 
                     
                     $('#card_grupos').append(`

@@ -29,7 +29,7 @@ include 'site/inclusao.html';
                 <input type="password" name="senha" id="senha" class="form-control form-control-lg" />
                 <label class="form-label" for="form1Example23">Senha</label>
             </div>
-            <!-- alerta usuario existente -->
+            <!-- alertas  -->
             <?php
             session_start();
             if(isset($_SESSION['danger'])){
@@ -44,7 +44,6 @@ include 'site/inclusao.html';
                 unset($_SESSION['danger']);
             }
             ?>
-            <!-- alerta verifica_login -->
             <?php
             session_start();
             if(isset($_SESSION['alert'])){
