@@ -138,8 +138,40 @@ function deleteCityInList(id_cidades){
     verifyAddButton()
 }
 
+function preencheOptionCity(){
+    
+    //event.preventDefault();
+    $.ajax({
+        type: "GET",
+        url: "../rotas/data.php?req=todasCidades",
+        success: function (response) {
+            var data2 = JSON.parse(response);
+            var html2='';
+            
+            //console.log(response);
+            $.each(data2, function (indexInArray, element) { 
+                    //console.log(element);
+                    //console.log(element);
+                    html2 += `<option value="${element.id_cidade}">${element.cidades}</option>`;
+                    //console.log(html2);
+                    
+                });
+                console.log(html2);
+                $(`#seletor-cidade`).append(`${html2}`);
+                $("#modalBody").append(`<div> testeee</div>`);
+               
+        }
+    });
+}
+
+
+
+
+
 function getClick(){
     $(".button-visualizar").click(function(e) {
+        
+        
         $('#modalBody').empty();
 
         console.log($(this).val());
@@ -149,6 +181,9 @@ function getClick(){
             url: "../rotas/data.php?req=cidades",
             data: { id_grupo: $(this).val() },
             success: function (response) {
+                preencheOptionCity()
+                
+                
                 var data2 = JSON.parse(response);
                 var html='';
                 if(!data2){
@@ -162,7 +197,7 @@ function getClick(){
                                                <div class="row">
                                                     <div class="col-sm-10">
                                                         <select id="seletor-cidade" class="form-control w-100 mb-3">
-                                                                <option value="10">Rio de Janeiro - RJ</option>
+                                            
                                                         </select>
                                                     </div>
                                                     <div class="col-sm-2">
@@ -207,8 +242,10 @@ function addCity(){
     event.preventDefault();
 
     var id_cidade = $("#seletor-cidade").val()
-    var cidade = $("#seletor-cidade").text()
-
+    console.log(id_cidade);
+    // $("div.id_100 select").val("val2");
+    //$('.id_100 option[value=val2]').attr('selected','selected');
+    var cidade = $("#seletor-cidade option[value="+id_cidade+"]").text();
     console.log(cidade);
 
     $("#ol_cidades_modal").append(`<li class="widget-49-meeting-item item_${id_cidade}"> <input type="hidden" value="${id_cidade}" /> ${cidade} <button class="btn btn-outline-danger" onclick="deleteCityInList('${id_cidade}')">X</button></li>`)
@@ -222,6 +259,9 @@ function verifyAddButton(){
 }
 
 $(document).ready(function(){
+    preencheOptionCity()
+
+    
     
     $.ajax({
         type: "GET",
@@ -266,7 +306,8 @@ $(document).ready(function(){
                 });
 
                 getClick() 
-                         
+               
+                
             }else{
                 $('#titulo-tabela').remove();
                 $('#card_grupos').append('<span class="pl-2">Você não tem grupos cadastrados.</span>');     
