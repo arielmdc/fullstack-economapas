@@ -77,6 +77,41 @@ class Cidade{
         }
     }
 
+    public function desativaCidade($id_grupo, $id_cidade){
+
+        try {
+
+            $PDO = Conexao::Connect();
+
+            $query = $PDO->prepare('SELECT * FROM grupocidade WHERE id_grupo = :id_grupo AND id_cidade = :id_cidade ');
+            $query->execute([
+                ':id_grupo' => $id_grupo,
+                ':id_cidade' => $id_cidade
+            ]);
+
+            if($query->rowCount() > 0){
+                $result = $query->fetchAll();
+                $response = [];
+                $count = 0;
+
+                foreach ($result as $res) {
+                    $response[$count]['id_grupo'] = $res['id_grupo'];
+                    $response[$count]['id_cidade'] = $res['id_cidade'];
+                    
+                    $count++;
+                }
+
+                return $response;
+            }else{
+                return false;
+            }
+
+
+        }catch(PDOException $erro){
+            return false;
+        }
+    }
+
 
     
 
