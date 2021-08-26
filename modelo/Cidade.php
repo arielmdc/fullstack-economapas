@@ -44,34 +44,12 @@ class Cidade{
     }
 
 
-    private function verificaCidadeCadastrada($idGrupo, $idCidade){
-
-        try {
-
-            $PDO = Conexao::Connect();
-
-            $query = $PDO->prepare('SELECT * FROM grupoHasCidade WHERE idGrupo = :idGrupo AND idCidade = :idCidade ');
-            $query->execute([
-                ':idGrupo' => $idGrupo,
-                ':idCidade' => $idCidade
-            ]);
-
-            if($query->rowCount() > 0) {
-                return true;
-            }else{
-                return false;
-            }
-
-        }catch(PDOException $erro){
-            return false;
-        }
-    }
-
     public function retornaTodasCidades(){
 
         try {
             $PDO = Conexao::Connect();
 
+            $query =
             $query = $PDO->prepare('SELECT * FROM cidades ORDER BY estado ASC');
             $query->execute();
 

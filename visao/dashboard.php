@@ -134,7 +134,8 @@ include '../site/navbar.php';
 
 function deleteCityInList(id_cidades){
     $(`.item_${id_cidades}`).remove()
-
+    $("#seletor-cidade option[value=" + id_cidades + "]").attr("disabled", false);
+    $("#seletor-cidade option[value=" + id_cidades + "]").prop("selected", true);
     verifyAddButton()
 }
 
@@ -152,13 +153,13 @@ function preencheOptionCity(){
             $.each(data2, function (indexInArray, element) { 
                     //console.log(element);
                     //console.log(element);
+                    
                     html2 += `<option value="${element.id_cidade}">${element.cidades}</option>`;
                     //console.log(html2);
                     
                 });
-                console.log(html2);
+                //console.log(html2);
                 $(`#seletor-cidade`).append(`${html2}`);
-                $("#modalBody").append(`<div> testeee</div>`);
                
         }
     });
@@ -174,26 +175,31 @@ function getClick(){
         
         $('#modalBody').empty();
 
-        console.log($(this).val());
+        //console.log($(this).val());
         
         $.ajax({
             type: "POST",
             url: "../rotas/data.php?req=cidades",
             data: { id_grupo: $(this).val() },
             success: function (response) {
+                console.log(response);
                 preencheOptionCity()
                 
                 
                 var data2 = JSON.parse(response);
                 var html='';
                 if(!data2){
-                    $('#modalBody').append(`<span>Não há cidades cadastradas</span>`);
+                    
+                    //$('#modalBody').append(`<span>Não há cidades cadastradas</span>`);
                 }else{
                     $.each(data2, function (indexInArray, element) { 
-                        // console.log(element);
-                        html += `<li class="widget-49-meeting-item item_${element.id_cidades}"> <input type="hidden" value="${element.id_cidades}" /> ${element.capital} - ${element.uf} <button class="btn btn-outline-danger" onclick="deleteCityInList('${element.id_cidades}')">X</button></li>`;
+                         console.log(element);
+                        
+                        html += `<input type="hidden" value="${element.id_grupo}" /> <div><li class="widget-49-meeting-item item_${element.id_cidades}"> <input type="hidden" value="${element.id_cidades}" /> ${element.capital} - ${element.uf} <button class="btn btn-outline-danger" onclick="deleteCityInList('${element.id_cidades}')">X</button></li></div>`;
+
                     });
-                    $('#modalBody').append(`<form action="../controle/grupo/xxx.php" method="post" style="margin: 0">
+                }
+                $('#modalBody').append(`<form action="../controle/cidade/cadastro_cidades.php" method="post" style="margin: 0">
                                                <div class="row">
                                                     <div class="col-sm-10">
                                                         <select id="seletor-cidade" class="form-control w-100 mb-3">
@@ -204,12 +210,11 @@ function getClick(){
                                                         <button class="btn btn-primary" id="adicionar-cidade" onclick="addCity()">+</button>
                                                     </div>
                                                </div>
-
                                                 <ol class="widget-49-meeting-points" id="ol_cidades_modal">${html}</ol>
 
                                                 <button type="submit" class="btn btn-primary btn-block w-100 mt-3"> Salvar cidades </button>
                                             </form>`);
-                }
+                
             }
         });
     });
@@ -231,6 +236,7 @@ function setCities(id_grupo){
                 $.each(data2, function (indexInArray, element) { 
                     //console.log(element);
                     html += `<li class="widget-49-meeting-item">${element.capital} - ${element.uf} </li>`;
+                    
                 });
                 $(`#${id_grupo}`).append(`<ol class="widget-49-meeting-points" id="ol_cidades">${html}</ol>`);
             }
@@ -249,17 +255,24 @@ function addCity(){
     console.log(cidade);
 
     $("#ol_cidades_modal").append(`<li class="widget-49-meeting-item item_${id_cidade}"> <input type="hidden" value="${id_cidade}" /> ${cidade} <button class="btn btn-outline-danger" onclick="deleteCityInList('${id_cidade}')">X</button></li>`)
-
+    
+    $("#seletor-cidade option:selected").attr('disabled', true);
+    $('#seletor-cidade option:selected').prop("selected", false);
     verifyAddButton()
 }
 
 function verifyAddButton(){
-    if($("#ol_cidades_modal li").length >= 5) $("#adicionar-cidade").prop("disabled", true)
-    else $("#adicionar-cidade").prop("disabled", false)
+    
+    if($("#ol_cidades_modal li").length >= 5) {
+        $("#adicionar-cidade").prop("disabled", true)
+    }else{
+        $("#adicionar-cidade").prop("disabled", false)
+    } 
+
 }
 
 $(document).ready(function(){
-    preencheOptionCity()
+    //preencheOptionCity()
 
     
     
@@ -309,7 +322,7 @@ $(document).ready(function(){
                
                 
             }else{
-                $('#titulo-tabela').remove();
+                
                 $('#card_grupos').append('<span class="pl-2">Você não tem grupos cadastrados.</span>');     
             }
         }
