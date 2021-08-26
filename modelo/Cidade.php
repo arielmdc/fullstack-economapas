@@ -44,5 +44,66 @@ class Cidade{
     }
 
 
+    private function verificaCidadeCadastrada($idGrupo, $idCidade){
+
+        try {
+
+            $PDO = Conexao::Connect();
+
+            $query = $PDO->prepare('SELECT * FROM grupoHasCidade WHERE idGrupo = :idGrupo AND idCidade = :idCidade ');
+            $query->execute([
+                ':idGrupo' => $idGrupo,
+                ':idCidade' => $idCidade
+            ]);
+
+            if($query->rowCount() > 0) {
+                return true;
+            }else{
+                return false;
+            }
+
+        }catch(PDOException $erro){
+            return false;
+        }
+    }
+
+    public function retornaTodasCidades(){
+
+        try {
+            $PDO = Conexao::Connect();
+
+            $query = $PDO->prepare('SELECT * FROM cidades ORDER BY estado ASC');
+            $query->execute();
+
+            if($query->rowCount() > 0){
+                $result = $query->fetchAll();
+                $response = [];
+                $count = 0;
+
+                foreach ($result as $res) {
+                    $response[$count]['id_cidade'] = $res['id_cidade'];
+                    $response[$count]['cidades'] = $res['capital'] . ' - ' . $res['uf'];
+                    $count++;
+                }
+
+                return $response;
+            }else{
+                return false;
+            }
+
+        } catch (PDOException $erro) {
+            return array(
+                'tipo' => 0,
+                'mensagem' => 'Erro no banco: ' . $erro->getMessage()
+            );
+        }
+    }
+
+
+    
+
+    
+
+
 
 }
