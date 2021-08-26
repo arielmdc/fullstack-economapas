@@ -14,6 +14,13 @@ switch ($req) {
         $resp = $cidade->retornaCidades($id_grupo);
         echo json_encode($resp);
         break;
+    case 'todasCidades':
+        require_once '../modelo/Cidade.php';
+        $cidade = new Cidade();
+        //$id_grupo = $_POST['id_grupo'];
+        $resp = $cidade->retornaTodasCidades();
+        echo json_encode($resp);
+        break;
     case 'getGrupos':
         require_once '../modelo/Grupo.php';
         session_start();
