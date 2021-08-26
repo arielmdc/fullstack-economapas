@@ -28,41 +28,41 @@ include '../site/navbar.php';
     </center>
     <?php
             session_start();
-            if(isset($_SESSION['mensagem'])){
+            if(isset($_SESSION['alerta'])){
                 echo('
                 <div class="alert alert-warning d-flex align-items-center" role="alert">
                 <svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Danger:"><use xlink:href="#exclamation-triangle-fill"/></svg>
                 <div>
-                '.$_SESSION['mensagem']['content'].'
+                '.$_SESSION['alerta']['content'].'
                 </div>
             </div>
                 ');
-                unset($_SESSION['mensagem']);
+                unset($_SESSION['alerta']);
             }
 
-            if(isset($_SESSION['mensagem2'])){
+            if(isset($_SESSION['success'])){
                 echo('
                 <div class="alert alert-success d-flex align-items-center" role="alert">
                 <svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Success:"><use xlink:href="#check-circle-fill"/></svg>
                 <div>
-                '.$_SESSION['mensagem2']['content'].'
+                '.$_SESSION['success']['content'].'
                 </div>
                 </div>
                 ');
-                unset($_SESSION['mensagem2']);
+                unset($_SESSION['success']);
             }
 
-            if(isset($_SESSION['mensagem3'])){
+            if(isset($_SESSION['danger'])){
                 echo('
                 <div class="alert alert-danger d-flex align-items-center" role="alert">
                 <svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Danger:"><use xlink:href="#exclamation-triangle-fill"/></svg>
                 <div>
-                '.$_SESSION['mensagem3']['content'].'
+                '.$_SESSION['danger']['content'].'
                 </div>
                 </div>
 
                 ');
-                unset($_SESSION['mensagem3']);
+                unset($_SESSION['danger']);
             }
             ?>
             
@@ -81,7 +81,6 @@ include '../site/navbar.php';
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Voltar</button>
-        <!-- <button type="button" class="btn btn-primary">Save changes</button> -->
       </div>
     </div>
   </div>
@@ -92,73 +91,56 @@ include '../site/navbar.php';
 
     <div class="container">
         <div class="row" id="card_grupos">
-        <!-- <div class="col-lg-4">
-        <div class="card card-margin">
-            <div class="card-header no-border">
-                <h5 class="card-title">MOM</h5>
-            </div>
-            <div class="card-body pt-0">
-                <div class="widget-49">
-                    <div class="widget-49-title-wrapper">
-                        <div class="widget-49-date-primary">
-                            <span class="widget-49-date-day">09</span>
-                            <span class="widget-49-date-month">apr</span>
-                        </div>
-                        <div class="widget-49-meeting-info">
-                            <span class="widget-49-pro-title">PRO-08235 DeskOpe. Website</span>
-                            <span class="widget-49-meeting-time">12:00 to 13.30 Hrs</span>
-                        </div>        
-                    </div>
-                    <ol class="widget-49-meeting-points">
-                        <li class="widget-49-meeting-item"><span>Expand module is removed</span></li>
-                        <li class="widget-49-meeting-item"><span>Data migration is in scope</span></li>
-                        <li class="widget-49-meeting-item"><span>Session timeout increase to 30 minutes</span></li>
-                    </ol>
-                    <div class="widget-49-meeting-action">
-                        <a href="#" class="btn btn-sm btn-flash-border-primary">View All</a>
-                    </div>
-                </div>
-            </div>
+       
+
+
         </div>
-    </div> -->
-
-
-</div>
-</div>
+    </div>
+        </div>
 <?php include '../site/footer.html'; ?> 
 </body>
 
 </hmtl>
 
 <script>
+function verifySaveButton(){
 
+if($("#ol_cidades_modal li").length <= 0) {
+    $("#salvar-cidade").prop("disabled", true)
+    
+}else{
+    $("#salvar-cidade").prop("disabled", false)
+} 
+}
 function deleteCityInList(id_cidades){
+    
     $(`.item_${id_cidades}`).remove()
     $("#seletor-cidade option[value=" + id_cidades + "]").attr("disabled", false);
     $("#seletor-cidade option[value=" + id_cidades + "]").prop("selected", true);
     verifyAddButton()
+    verifySaveButton()
+    verifyEmptyList()
+}
+
+function verifyEmptyList(){
+console.log("teste ",$('#ol_cidades_modal li').length)
+    if($('#ol_cidades_modal li').length){
+        $('#aviso-vazio').remove();
+    }else{
+        $('#ol_cidades_modal').after('<span id="aviso-vazio">Não há cidades cadastradas</span>');
+    }
 }
 
 function preencheOptionCity(){
-    
-    //event.preventDefault();
     $.ajax({
         type: "GET",
         url: "../rotas/data.php?req=todasCidades",
         success: function (response) {
             var data2 = JSON.parse(response);
             var html2='';
-            
-            //console.log(response);
             $.each(data2, function (indexInArray, element) { 
-                    //console.log(element);
-                    //console.log(element);
-                    
                     html2 += `<option value="${element.id_cidade}">${element.cidades}</option>`;
-                    //console.log(html2);
-                    
                 });
-                //console.log(html2);
                 $(`#seletor-cidade`).append(`${html2}`);
                
         }
@@ -183,42 +165,33 @@ function disableCity(id_grupo,id_cidade){
     });
 }
 
-
-
-
-
 function getClick(){
     $(".button-visualizar").click(function(e) {
-        
-        
-        $('#modalBody').empty();
-
-        //console.log($(this).val());
-        
+        verifyAddButton()
+        var id_grupo = $(this).val()
+        $('#modalBody').empty(); 
         $.ajax({
             type: "POST",
             url: "../rotas/data.php?req=cidades",
-            data: { id_grupo: $(this).val() },
+            data: { id_grupo: id_grupo },
             success: function (response) {
                 console.log(response);
                 preencheOptionCity();
-                
-                
                 var data2 = JSON.parse(response);
+                console.log(data2)
                 var html='';
                 if(!data2){
-                    
-                    //$('#modalBody').append(`<span>Não há cidades cadastradas</span>`);
+                     html='<span id="aviso-vazio">Não há cidades cadastradas</span>';
                 }else{
+
                     $.each(data2, function (indexInArray, element) { 
                         disableCity(element.id_grupo,element.id_cidades);
                          console.log(element);
-                        
-                        html += `<input type="hidden" value="${element.id_grupo}" /> <div><li  class=" li_item widget-49-meeting-item item_${element.id_cidades}"> <input type="hidden" value="${element.id_cidades}" /> ${element.capital} - ${element.uf} <button class="btn btn-outline-danger" onclick="deleteCityInList('${element.id_cidades}')">X</button></li></div>`;
-
+                        html += ` <div><li  class=" li_item widget-49-meeting-item item_${element.id_cidades}"> <input type="hidden" name="id_cidade[]" value="${element.id_cidades}" /> ${element.capital} - ${element.uf} <button class="btn btn-outline-danger" onclick="deleteCityInList('${element.id_cidades}')">X</button></li></div>`;
                     });
                 }
                 $('#modalBody').append(`<form action="../controle/cidade/cadastro_cidades.php" method="post" style="margin: 0">
+                                                <input type="hidden" name="id_grupo" value="${id_grupo}" />
                                                <div class="row">
                                                     <div class="col-sm-10">
                                                         <select id="seletor-cidade" class="form-control w-100 mb-3">
@@ -231,9 +204,10 @@ function getClick(){
                                                </div>
                                                 <ol class="widget-49-meeting-points" id="ol_cidades_modal">${html}</ol>
 
-                                                <button type="submit" class="btn btn-primary btn-block w-100 mt-3"> Salvar cidades </button>
+                                                <button type="submit" id="salvar-cidade" class="btn btn-primary btn-block w-100 mt-3"> Salvar cidades </button>
                                             </form>`);
-                
+                                            verifySaveButton()
+                                            
             }
         });
     });
@@ -246,16 +220,12 @@ function setCities(id_grupo){
         data: { id_grupo: id_grupo },
         success: function (response) {
             var data2 = JSON.parse(response);
-            
-            // console.log(data2);
             var html='';
             if(!data2){
                 $(`#${id_grupo}`).append(`<span>Não há cidades cadastradas</span>`);
             }else{
                 $.each(data2, function (indexInArray, element) { 
-                    //console.log(element);
                     html += `<li class="widget-49-meeting-item">${element.capital} - ${element.uf} </li>`;
-                    
                 });
                 $(`#${id_grupo}`).append(`<ol class="widget-49-meeting-points" id="ol_cidades">${html}</ol>`);
             }
@@ -264,26 +234,27 @@ function setCities(id_grupo){
 }
 
 function addCity(){
+    
+    $("#salvar-cidade").prop("disabled", false)
     event.preventDefault();
-
     var id_cidade = $("#seletor-cidade").val()
     console.log(id_cidade);
-    // $("div.id_100 select").val("val2");
-    //$('.id_100 option[value=val2]').attr('selected','selected');
     var cidade = $("#seletor-cidade option[value="+id_cidade+"]").text();
     console.log(cidade);
 
-    $("#ol_cidades_modal").append(`<li class=" li_item widget-49-meeting-item item_${id_cidade}"> <input type="hidden" value="${id_cidade}" /> ${cidade} <button class="btn btn-outline-danger" onclick="deleteCityInList('${id_cidade}')">X</button></li>`)
+    $("#ol_cidades_modal").append(`<li class=" li_item widget-49-meeting-item item_${id_cidade}"> <input type="hidden" name="id_cidade[]" value="${id_cidade}" /> ${cidade} <button class="btn btn-outline-danger" onclick="deleteCityInList('${id_cidade}')">X</button></li>`)
     
     $("#seletor-cidade option:selected").attr('disabled', true);
     $('#seletor-cidade option:selected').prop("selected", false);
     verifyAddButton()
+    verifyEmptyList()
 }
 
+
 function verifyAddButton(){
-    
     if($("#ol_cidades_modal li").length >= 5) {
         $("#adicionar-cidade").prop("disabled", true)
+        
     }else{
         $("#adicionar-cidade").prop("disabled", false)
     } 
@@ -291,10 +262,7 @@ function verifyAddButton(){
 }
 
 $(document).ready(function(){
-    //preencheOptionCity()
 
-    
-    
     $.ajax({
         type: "GET",
         url: "../rotas/data.php?req=getGruposByUsuario",
@@ -336,12 +304,8 @@ $(document).ready(function(){
 
                     setCities(val.id_grupo);            
                 });
-
                 getClick() 
-               
-                
             }else{
-                
                 $('#card_grupos').append('<span class="pl-2">Você não tem grupos cadastrados.</span>');     
             }
         }
