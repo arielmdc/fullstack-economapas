@@ -9,7 +9,7 @@ $result = $grupo->deleta($idGrupo);
 if($result['tipo']){
     $_SESSION['success']['content'] = $result['mensagem'];
 }else{
-    $_SESSION['success']['content'] = "sa";
+    $_SESSION['success']['content'] = $result['mensagem'];
 }
 
 header('Location: /visao/dashboard.php');
